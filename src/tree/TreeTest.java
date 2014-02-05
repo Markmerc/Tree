@@ -6,21 +6,28 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * Tests the Tree class
+ * @author Mark Mercurio
+ */
 public class TreeTest {
 
-	Tree<String> a;
-	Tree<String> b;
-	Tree<String> c;
-	Tree<String> d;
-	Tree<String> e;
-	Tree<String> f;
-	Tree<String> g;
-	Tree<String> h;
-	Tree<String> z;
+	private Tree<String> a;
+	private Tree<String> b;
+	private Tree<String> c;
+	private Tree<String> d;
+	private Tree<String> e;
+	private Tree<String> f;
+	private Tree<String> g;
+	private Tree<String> h;
+	private Tree<String> z;
 	
+	/**
+	 * Defaults the values for each test Tree
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		b = new Tree<String>("B");
@@ -35,17 +42,26 @@ public class TreeTest {
 		
 	}
 
+	/**
+	 * Tests that the constructor returns type an object of type Tree.
+	 */
 	@Test
 	public void testTree() {
 		Tree<String> z = new Tree<String>("Z");
 		assertTrue(z instanceof Tree);
 	}
 
+	/**
+	 * Tests the getValue method.
+	 */
 	@Test
 	public void testGetValue() {
 		assertTrue(a.getValue().equals("A"));
 	}
 
+	/**
+	 * Tests the setValue method.
+	 */
 	@Test
 	public void testSetValue() {
 		assertTrue(a.getValue().equals("A"));
@@ -55,48 +71,72 @@ public class TreeTest {
 		assertTrue(a.getValue().equals("1234"));
 	}
 
+	/**
+	 * Tests the numberOfChildren method.
+	 */
 	@Test
 	public void testNumberOfChildren() {
 		assertTrue(a.numberOfChildren() == 2);
 		assertTrue(b.numberOfChildren() == 0);
 	}
 
+	/**
+	 * Tests the firstChild method.
+	 */
 	@Test
 	public void testFirstChild() {
 		assertTrue(a.firstChild() == b);
 		assertTrue(b.firstChild() == null);
 	}
 
+	/**
+	 * Tests the lastChild method.
+	 */
 	@Test
 	public void testLastChild() {
 		assertTrue(a.lastChild() == c);
 		assertTrue(b.lastChild() == null);
 	}
 
+	/**
+	 * Tests the child method for valid indices
+	 */
     @Test
 	public void testChild() {
 		assertTrue(a.child(1) == c);
 		assertTrue(a.child(0) == b);
 	}
-    
+
+	/**
+	 * Tests the child method with a negative index
+	 */
     @Test(expected=NoSuchElementException.class)
     public void testChildNegIndex() {
 		//Throw exceptions
 		a.child(-1);
     }
-    
+
+	/**
+	 * Tests the child method with too large an index
+	 */
     @Test(expected=NoSuchElementException.class)
     public void testChildTooLargeIndex() {
 		//Throw exceptions
 		a.child(2);
     }
     
+	/**
+	 * Tests the child method on an empty children list.
+	 */
     @Test(expected=NoSuchElementException.class)
     public void testChildEmptyList() {
 		//Throw exceptions
 		b.child(1);
     }
 
+    /**
+     * Tests the children method.
+     */
 	@Test
 	public void testChildren() {
 		assertTrue(a.children() instanceof Iterator<?>);
@@ -118,12 +158,18 @@ public class TreeTest {
 		assertTrue(a.child(0) == c);
 	}
 
+	/**
+	 * Tests the isLeaf method.
+	 */
 	@Test
 	public void testIsLeaf() {
 		assertFalse(a.isLeaf());
 		assertTrue(b.isLeaf());
 	}
 
+	/**
+	 * Tests the equals method.
+	 */
 	@Test
 	public void testEqualsObject() {
 		
@@ -135,6 +181,10 @@ public class TreeTest {
 		//Recognizes a node with the same value and no children
 		z = new Tree<String>("H");
 		assertTrue(h.equals(z));
+		
+		//Does not equal a node with different value and no children
+		Tree<String> q = new Tree<String>("Q");
+		assertFalse(q.equals(z));
 		
 		//Recognizes trees with same number of children
 		Tree<String> _2 = new Tree<String>("B");
@@ -157,6 +207,9 @@ public class TreeTest {
 		assertFalse(_1.equals(a));
 	}
 
+	/**
+	 * Tests the toString method.
+	 */
 	@Test
 	public void testToString() {
 		assertTrue(a.toString().equals("A\n  B\n  C\n"));
@@ -167,6 +220,9 @@ public class TreeTest {
 		assertTrue(a.toString().equals("A\n  B\n    D\n    E\n  C\n    E\n"));
 	}
 
+	/**
+	 * Tests the addChild(Tree<V> newChild) method with valid (non-looping) children.
+	 */
     @Test
 	public void testAddChildOneParameter() {
 		a.addChild(d);
@@ -191,6 +247,9 @@ public class TreeTest {
 		assertTrue(c.child(0).getValue().equals("E"));
 	}
     
+	/**
+	 * Tests the addChild(Tree<V> newChild) method with invalid (looping) children.
+	 */
     @Test(expected=IllegalArgumentException.class)
     public void  testAddChildOneParameterLooping() {
 		a.addChild(d);
@@ -215,6 +274,10 @@ public class TreeTest {
 		assertTrue(b.numberOfChildren() == 1);
 		assertTrue(b.child(0).getValue().equals("E"));
     }
+    
+    /**
+     * Tests the addChild(int index, Tree<V> newChild) method with looping children.
+     */
     @Test (expected=IllegalArgumentException.class)
 	public void testAddChildIndexedLoop() {
     	a.addChild(0, e);
@@ -230,6 +293,9 @@ public class TreeTest {
     	assertTrue(c.child(0) == f);
     }
     
+    /**
+     * Tests the addChild(int index, Tree<V> newChild) method negative index.
+     */
     @Test (expected=IllegalArgumentException.class)
 	public void testAddChildIndexedNegative() {
 		a.addChild(-1, f);
@@ -239,6 +305,9 @@ public class TreeTest {
 		assertTrue(a.child(2) == c);
     }
     
+    /**
+     * Tests the addChild(int index, Tree<V> newChild) method with too large an index.
+     */
     @Test (expected=IllegalArgumentException.class)
 	public void testAddChildIndexedTooLarge() {
 		a.addChild(5, f);
@@ -248,6 +317,9 @@ public class TreeTest {
 		assertTrue(a.child(2) == c);
     }
 
+    /**
+     * Tests the addChild(int index, Tree<V> newChild) method with valid children.
+     */
     @Test 
 	public void testAddChildIndexed() {
 		a.addChild(0, e);
@@ -262,6 +334,10 @@ public class TreeTest {
 		assertTrue(c.child(0) == f);
 
 	}
+    
+    /**
+     * Tests the addChildren method with looping children.
+     */
     @Test (expected=IllegalArgumentException.class)
 	public void testAddChildrenLoop() {
 		b.addChildren(f, g, h);
@@ -271,6 +347,9 @@ public class TreeTest {
 		assertTrue(c.child(0) == e);
     }
 
+    /**
+     * Tests the addChildren method with valid children.
+     */
     @Test
 	public void testAddChildren() {
 		b.addChildren(f, g, h);
@@ -280,6 +359,9 @@ public class TreeTest {
 		assertTrue(b.child(2) == h);
 	}
 
+    /**
+     * Tests removeChild method with negative index.
+     */
     @Test (expected=NoSuchElementException.class)
     public void testRemoveChildNegative() {
     	a.removeChild(-1);
@@ -287,6 +369,9 @@ public class TreeTest {
     	assertTrue(a.child(1) == c);
     }
     
+    /**
+     * Tests removeChild method with too large an index.
+     */
     @Test (expected=NoSuchElementException.class)
 	public void testRemoveChildTooLarge() {
     	a.removeChild(5);
@@ -294,11 +379,17 @@ public class TreeTest {
     	assertTrue(a.child(1) == c);
     }
     
+    /**
+     * Tests removeChild method on childless Tree.
+     */
     @Test (expected=NoSuchElementException.class)
 	public void testRemoveChildDoesntExist() {
     	b.removeChild(0);
     }
 
+    /**
+     * Tests removeChild method with valid index.
+     */
     @Test
 	public void testRemoveChild() {
     	a.addChild(d);

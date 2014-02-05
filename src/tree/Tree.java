@@ -5,7 +5,7 @@ import java.util.*;
  * A class to implement an abstract data type for general trees.
  * @author Mark Mercurio
  *
- * @param 1.0
+ * @version 1.0
  */
 public class Tree<V> {
 
@@ -108,12 +108,14 @@ public class Tree<V> {
 	@Override 
 	public boolean equals(Object object) {
 		if (this == object) return true;
+		
 		if (!(object instanceof Tree)) return false;
 
-		Tree<V> tree = (Tree<V>)object;
+		Tree<?> tree = (Tree<?>)object;
+		
+		if (!tree.value.equals(this.value)) return false;
 		
 		if (this.children.size() != tree.children.size()) return false;
-		
 		
 		for (int i = 0; i < this.children.size(); i++) {
 			if (!this.children.get(i).equals(tree.children.get(i)))
